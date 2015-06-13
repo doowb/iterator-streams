@@ -46,7 +46,11 @@ readJSON('./package.json')
 ## Related projects
 
 <!-- add an array of related projects, then un-escape the helper -->
-<%- related(['iterator-sync', 'iterator-async', 'iterator-promise', 'loader-cache']) %>
+
+* [iterator-sync](https://github.com/doowb/iterator-sync): Iterator over a stack of functions.
+* [iterator-async](https://github.com/doowb/iterator-async): Iterator over a stack of functions.
+* [iterator-promise](https://github.com/doowb/iterator-promise): Iterator over a stack of functions.
+* [loader-cache](https://github.com/jonschlinkert/loader-cache): Register loader functions that dynamically read, parse or otherwise transform file contents when the name… [more](https://github.com/jonschlinkert/loader-cache)
 
 ## Running tests
 
