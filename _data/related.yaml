@@ -1,0 +1,7 @@
+content: >-
+  <li><a href="http://github.com/dominictarr/event-stream">event-stream</a>:
+  construct pipes of streams of events</li>
+
+  <li><a href="https://github.com/rvagg/through2#readme">through2</a>: A tiny
+  wrapper around Node streams2 Transform to avoid explicit subclassing
+  noise</li>
