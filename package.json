@@ -25,5 +25,11 @@
   "dependencies": {
     "event-stream": "^3.3.1",
     "through2": "^2.0.0"
-  }
+  },
+  "related": [
+    "loader-cache",
+    "iterator-async",
+    "iterator-sync",
+    "iterator-promise"
+  ]
 }
