@@ -1,14 +1,21 @@
 content: >-
-  <li><a href="https://github.com/doowb/iterator-async">iterator-async</a>:
-  Iterator over a stack of functions.</li>
+  <li><a href="http://github.com/dominictarr/event-stream">event-stream</a>:
+  construct pipes of streams of events</li>
 
-  <li><a href="https://github.com/doowb/iterator-sync">iterator-sync</a>:
-  Iterator over a stack of functions.</li>
+  <li><a href="https://github.com/doowb/iterator-async">iterator-async</a>:
+  Iterate over a stack of async functions.</li>
 
   <li><a href="https://github.com/doowb/iterator-promise">iterator-promise</a>:
   Iterator over a stack of functions.</li>
+
+  <li><a href="https://github.com/doowb/iterator-sync">iterator-sync</a>: Iterate
+  over a stack of functions.</li>
 
   <li><a href="https://github.com/jonschlinkert/loader-cache">loader-cache</a>:
   Register loader functions that dynamically read, parse or otherwise transform
   file contents when the name… <a
   href="https://github.com/jonschlinkert/loader-cache">more</a></li>
+
+  <li><a href="https://github.com/rvagg/through2#readme">through2</a>: A tiny
+  wrapper around Node streams2 Transform to avoid explicit subclassing
+  noise</li>

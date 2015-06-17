@@ -1,5 +1,5 @@
 name: iterator-streams
-description: Iterator over a stack of functions.
+description: Iterate over a stack of streams.
 version: 0.1.0
 homepage: 'https://github.com/doowb/iterator-streams'
 author: 'Brian Woodward (https://github.com/doowb)'
@@ -19,8 +19,11 @@ devDependencies:
 dependencies:
   event-stream: ^3.3.1
   through2: ^2.0.0
-related:
-  - loader-cache
-  - iterator-async
-  - iterator-sync
-  - iterator-promise
+meta:
+  related:
+    - event-stream
+    - loader-cache
+    - iterator-async
+    - iterator-promise
+    - iterator-sync
+    - through2
