@@ -2,7 +2,9 @@
 
 > Iterate over a stack of streams.
 
-This module is intended to be used with [loader-cache](https://github.com/jonschlinkert/loader-cache)but may be used by itself or in other modules.
+This module works with [loader-cache](https://github.com/jonschlinkert/loader-cache) but it can also used by itself or with other modules.
+
+## Install
 
 Install with [npm](https://www.npmjs.com/)
 
