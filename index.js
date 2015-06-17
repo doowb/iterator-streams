@@ -7,39 +7,50 @@
 
 'use strict';
 
+var es = require('event-stream');
+var through = require('through2');
+
 /**
  * Iterate over a stack of streams piping the results of
- * each steram to the next stream in the stack.
+ * each stream to the next stream in the stack.
  *
  * @param  {Array} `stack` Array of streams to use.
- * @return {Function} Returns a function that will iterator over the given stack of streams.
+ * @return {Function} Returns a function that will iterate over the given stack of streams.
  * @api public
- * @name  iterator
  */
 
-module.exports = function iteratorStream(stack) {
-  return function (/* arguments */) {
-    var self = this;
+function iteratorStream(opts, stack) {
+  if (!Array.isArray(stack)) {
+    stack = opts;
+    opts = {};
+  }
+
+  stack = stack || [];
+  var self = this;
+
+  return function () {
     var args = [].slice.call(arguments);
-    var es = require('event-stream');
-    var through = require('through2');
     var stream = through.obj();
+
     if (!stack.length) {
       stack = [through.obj()];
     }
 
-    var len = stack.length, i = 0;
+    var len = stack.length, i = -1;
     while (len--) {
-      var fn = stack[i++];
+      var fn = stack[++i];
       if (typeof fn === 'function') {
-        stack[i - 1] = fn.apply(self, args);
+        stack[i] = fn(opts, self);
       }
     }
+
     var results = es.pipe.apply(es, stack);
     process.nextTick(function () {
-      stream.write(args[0]);
+      stream.write(args);
       stream.end();
     });
     return stream.pipe(results);
   };
 };
+
+module.exports = iteratorStream;
