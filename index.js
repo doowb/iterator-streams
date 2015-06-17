@@ -19,13 +19,7 @@ var through = require('through2');
  * @api public
  */
 
-function iteratorStream(opts, stack) {
-  if (!Array.isArray(stack)) {
-    stack = opts;
-    opts = {};
-  }
-
-  stack = stack || [];
+function iteratorStream(stack) {
   var self = this;
 
   return function () {
@@ -40,7 +34,7 @@ function iteratorStream(opts, stack) {
     while (len--) {
       var fn = stack[++i];
       if (typeof fn === 'function') {
-        stack[i] = fn(opts, self);
+        stack[i] = fn(self);
       }
     }
 
