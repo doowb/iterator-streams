@@ -19,11 +19,12 @@ devDependencies:
 dependencies:
   event-stream: ^3.3.1
   through2: ^2.0.0
-meta:
+verbiage:
   related:
-    - event-stream
-    - loader-cache
-    - iterator-async
-    - iterator-promise
-    - iterator-sync
-    - through2
+    links:
+      - event-stream
+      - loader-cache
+      - iterator-async
+      - iterator-promise
+      - iterator-sync
+      - through2
