@@ -19,8 +19,9 @@ describe('iterator-streams', function () {
       .on('data', function (actual) {
         assert.deepEqual(actual, { foo: 'bar' });
         assert.deepEqual(called, ['a', 'b', 'c', 'd', 'e']);
-        done();
-      });
+      })
+      .on('error', done)
+      .on('end', done);
   });
 
   it('should return first argument when no functions are in the stack', function (done) {
@@ -28,8 +29,9 @@ describe('iterator-streams', function () {
     fn('foo', 'bar')
       .on('data', function (actual) {
         assert.equal(actual, 'foo');
-        done();
-      });
+      })
+      .on('error', done)
+      .on('end', done);
   });
 
   it('should still execute the functions when the stack only contains one function', function (done) {
@@ -39,30 +41,79 @@ describe('iterator-streams', function () {
       .on('data', function (actual) {
         assert.deepEqual(actual, { foo: 'bar' });
         assert.deepEqual(called, ['a']);
-        done();
-      });
+      })
+      .on('error', done)
+      .on('end', done);
+  });
+
+  it('should passthrough objects the first iterator has an empty stack', function (done) {
+    var called = [];
+    var stack = getStack(called);
+    var first = iterator([]);
+    var second = iterator(stack);
+    var count = 0;
+
+    first('first')
+      .on('data', function (data) {
+        assert.deepEqual(data, 'first');
+        assert.deepEqual(called, []);
+      })
+      .pipe(second('foo', 'bar'))
+      .on('data', function (data) {
+        count++;
+        if (count === 1) {
+          assert.deepEqual(called, ['b', 'c', 'd', 'e']);
+        } else {
+          assert.deepEqual(called, ['b', 'c', 'd', 'e', 'a', 'b', 'c', 'd', 'e']);
+        }
+      })
+      .on('error', done)
+      .on('end', done);
+  });
+
+  it('should passthrough objects the first iterator has an empty stack', function (done) {
+    var called = [];
+    var stack = getStack(called);
+    var first = iterator(stack);
+    var second = iterator([]);
+    var count = 0;
+
+    first('foo', 'bar')
+      .on('data', function (data) {
+        assert.deepEqual(data, { foo: 'bar' });
+        assert.deepEqual(called, ['a', 'b', 'c', 'd', 'e']);
+      })
+      .pipe(second('foo', 'bar'))
+      .on('data', function (data) {
+        count++;
+        if (count === 1) assert.deepEqual(data, { foo: 'bar' });
+        if (count === 2) assert.deepEqual(data, 'foo');
+        assert.deepEqual(called, ['a', 'b', 'c', 'd', 'e']);
+      })
+      .on('error', done)
+      .on('end', done);
   });
 });
 
 function getStack (called) {
   var stack = [
     function a (key, value) {
-      return through.obj(function (arg, enc, cb) {
-        // this stream doesn't return anything
-        // it just adds the object from the initial args
-        cb();
-      }, function (cb) {
+      var stream = through.obj();
+      var pass = through.obj();
+      var obj = {};
+      obj[key] = value;
+      stream.pipe(pass);
+      process.nextTick(function () {
         called.push('a');
-        var obj = {};
-        obj[key] = value;
-        this.push(obj);
-        cb();
+        stream.write(obj);
+        stream.end();
       });
+      return stream;
     },
-    through.obj(function b (obj, enc, cb) { called.push('b'); this.push(obj); cb(); }),
-    through.obj(function c (obj, enc, cb) { called.push('c'); this.push(obj); cb(); }),
-    through.obj(function d (obj, enc, cb) { called.push('d'); this.push(obj); cb(); }),
-    through.obj(function e (obj, enc, cb) { called.push('e'); this.push(obj); cb(); })
+    through.obj(function b (obj, enc, cb) { called.push('b'); cb(null, obj); }),
+    through.obj(function c (obj, enc, cb) { called.push('c'); cb(null, obj); }),
+    through.obj(function d (obj, enc, cb) { called.push('d'); cb(null, obj); }),
+    through.obj(function e (obj, enc, cb) { called.push('e'); cb(null, obj); })
   ];
   return stack;
 }
