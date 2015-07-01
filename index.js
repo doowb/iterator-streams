@@ -21,6 +21,8 @@ var es = require('event-stream');
 var through = require('through2');
 
 module.exports = function iteratorStream(stack) {
+  stack = stack || [];
+  stack = Array.isArray(stack) ? stack : [stack];
   if (!stack.length) {
     stack.push(identity);
   }

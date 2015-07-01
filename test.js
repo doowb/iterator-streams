@@ -46,10 +46,10 @@ describe('iterator-streams', function () {
       .on('end', done);
   });
 
-  it('should passthrough objects the first iterator has an empty stack', function (done) {
+  it('should passthrough objects when the first iterator has an empty stack', function (done) {
     var called = [];
     var stack = getStack(called);
-    var first = iterator([]);
+    var first = iterator();
     var second = iterator(stack);
     var count = 0;
 
@@ -71,11 +71,11 @@ describe('iterator-streams', function () {
       .on('end', done);
   });
 
-  it('should passthrough objects the first iterator has an empty stack', function (done) {
+  it('should passthrough objects when the second iterator has an empty stack', function (done) {
     var called = [];
     var stack = getStack(called);
     var first = iterator(stack);
-    var second = iterator([]);
+    var second = iterator();
     var count = 0;
 
     first('foo', 'bar')
@@ -89,6 +89,28 @@ describe('iterator-streams', function () {
         if (count === 1) assert.deepEqual(data, { foo: 'bar' });
         if (count === 2) assert.deepEqual(data, 'foo');
         assert.deepEqual(called, ['a', 'b', 'c', 'd', 'e']);
+      })
+      .on('error', done)
+      .on('end', done);
+  });
+
+  it('should passthrough everything when multiple iterators with no stacks are used.', function (done) {
+    var called = [];
+    var first = iterator();
+    var second = iterator();
+    var count = 0;
+
+    first('first')
+      .on('data', function (data) {
+        assert.deepEqual(data, 'first');
+        assert.deepEqual(called, []);
+      })
+      .pipe(second('second'))
+      .on('data', function (data) {
+        count++;
+        if (count === 1) assert.deepEqual(data, 'first');
+        if (count === 2) assert.deepEqual(data, 'second');
+        assert.deepEqual(called, []);
       })
       .on('error', done)
       .on('end', done);
