@@ -21,13 +21,14 @@ var es = require('event-stream');
 var through = require('through2');
 
 module.exports = function iteratorStream(stack) {
+  if (!stack.length) {
+    stack.push(identity);
+  }
+
   return function (/* arguments */) {
     var self = this;
     var args = [].slice.call(arguments);
     var pipeline = [];
-    if (!stack.length) {
-      stack.push(identity);
-    }
 
     var len = stack.length, i = 0;
     while (len--) {
